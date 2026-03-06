@@ -20,7 +20,6 @@ public class ThirdPersonMovement : MonoBehaviour
     private Animator _animator;
     private Vector3 _velocity;
 
-    // Animasyon parametre ID'leri (string yerine int kullanmak daha performanslı)
     private static readonly int Speed        = Animator.StringToHash("speed");
     private static readonly int IsDancing    = Animator.StringToHash("isDancing");
     private static readonly int HappyTrigger = Animator.StringToHash("happy");
@@ -48,7 +47,6 @@ public class ThirdPersonMovement : MonoBehaviour
         HandleAnimations(speed);
     }
 
-    // Hareket eder ve mevcut hız değerini (0-1) döndürür
     private float HandleMovement()
     {
         if (Keyboard.current == null) return 0f;
@@ -74,7 +72,6 @@ public class ThirdPersonMovement : MonoBehaviour
             _controller.Move(moveDir * moveSpeed * Time.deltaTime);
         }
 
-        // Blend Tree için hızı yumuşak şekilde 0↔1 arasında değiştir
         float targetSpeed = isMoving ? 1f : 0f;
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, Time.deltaTime * 8f);
         return _currentSpeed;
@@ -110,18 +107,15 @@ public class ThirdPersonMovement : MonoBehaviour
         if (isMoving || Keyboard.current.escapeKey.wasPressedThisFrame)
             _isDancing = false;
 
-        // Happy: E tuşuyla bir kere oynat (danstaysa çalışmaz)
+        // Happy: E tuşuyla bir kere oynat
         if (Keyboard.current.eKey.wasPressedThisFrame && !_isDancing)
             _animator.SetTrigger(HappyTrigger);
 
-        // Sad: R tuşuyla bir kere oynat (danstaysa çalışmaz)
+        // Sad: R tuşuyla bir kere oynat
         if (Keyboard.current.rKey.wasPressedThisFrame && !_isDancing)
             _animator.SetTrigger(SadTrigger);
 
-        // Blend Tree parametresi: 0 = Idle, 1 = Walking
         _animator.SetFloat(Speed, speed);
         _animator.SetBool(IsDancing, _isDancing);
-
-        Debug.Log($"speed:{speed:F2}  state:{_animator.GetCurrentAnimatorStateInfo(0).shortNameHash}");
     }
 }
