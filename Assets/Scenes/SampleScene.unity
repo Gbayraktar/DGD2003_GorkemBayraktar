@@ -27969,6 +27969,7 @@ GameObject:
   - component: {fileID: 801945554}
   - component: {fileID: 801945553}
   - component: {fileID: 801945551}
+  - component: {fileID: 801945557}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: Untagged
@@ -27985,9 +27986,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 801945550}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42ea344748b81fd4398dda730097b4c2, type: 3}
+  m_Script: {fileID: 11500000, guid: f58ba7d5702fa1e44a48b0c4de51efe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirstPersonMovement
+  cameraTransform: {fileID: 801945556}
+  mouseSensitivity: 0.2
+  pitchMin: -80
+  pitchMax: 80
+  requireCursorLockedForMovement: 1
+  requireCursorLockedForLook: 0
+  moveSpeed: 5
+  allowSprinting: 1
+  sprintMultiplier: 1.5
+  gravity: -20
+  jumpHeight: 1.5
 --- !u!114 &801945553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28100,12 +28112,37 @@ Transform:
   m_GameObject: {fileID: 801945550}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.34291482, y: 4.96, z: -51.27}
+  m_LocalPosition: {x: 0.34291482, y: 5.69, z: -51.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &801945557
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801945550}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 5.32
+  m_Radius: 1.42
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -2.35, z: 0}
 --- !u!43 &802715410
 Mesh:
   m_ObjectHideFlags: 0
