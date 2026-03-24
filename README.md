@@ -1,57 +1,53 @@
-# DGD2003_GorkemBayraktar
+Game Design Document: "The Bell Ringer" (Working Title)
+1. Game Overview
+Genre: Stealth / Strategy / First-Person or Third-Person
 
+Platform: PC / Console
 
-//////////////////////////////
+Theme: School Heist / Rule-breaking
 
-Game Design Document: MEMENTO LENS
-1. Executive Summary
-Memento Lens is a 3D psychological horror game played from a first-person perspective. The protagonist is a newly enrolled Cinema & Television student struggling with severe depression, social anxiety, and retrograde amnesia. The core gameplay revolves around using a camera to "capture" and "solidify" a world that is otherwise fading into a terrifying, pitch-black void.
+Core Loop: Infiltrate -> Avoid Detection -> Steal Objective -> Escape
 
-2. Core Pillars
-Visual Anchoring: The world is naturally pitch black. Only through the camera lens and the flash of a photo can the environment be rendered in its true colors and "remembered" by the character.
-
-Psychological Manifestation: Horror is derived from the protagonist's mental state. Social anxiety turns NPCs into faceless, towering shadows, while forgetfulness turns simple corridors into infinite loops.
-
-Fragmented Narrative: The story is told through the photos the player takes, revealing hidden details that aren't visible to the naked eye.
+2. Story & Setting
+The game takes place in St. Jude’s High School, a prestigious academy known for its high security and strict rules. You play as a student "phantom thief" who steals back confiscated items, leaked exam papers, or school trophies to prove that the system can be beaten.
 
 3. Gameplay Mechanics
-3.1. The "Memory Camera" (Primary Mechanic)
-The Viewfinder: When looking through the camera, the "Black Void" becomes translucent, allowing the player to see outlines of the environment.
+3.1. Movement & Stealth
+Crouching: Reduces noise and allows hiding behind desks/lockers.
 
-Flash Photography: Pressing the shutter releases a bright flash. This temporarily "paints" the room with its original colors.
+Light & Shadow: Staying in dark corners makes you harder to spot.
 
-Solidification: Successfully photographing a key object (e.g., a classroom door, a specific desk) makes that object permanent. If not photographed, the player may turn around and find the door has "disappeared" because the character forgot it existed.
+Distraction: Throwing soda cans or setting off fire alarms to move guards.
 
-Film/Battery Management: Resources are scarce. Every photo must count, adding a layer of survival tension.
+3.2. Obstacles (The Enemies)
+Security Cameras: Have a visible "vision cone." If you stay in it too long, the alarm triggers.
 
-3.2. Mental State Systems
-Anxiety Proximity: Approaching groups of students (represented as static, shadowy figures) causes the screen to shake and the audio to distort, simulating a panic attack.
+Security Guards (Janitors/Teachers): They patrol specific routes. If they see you, they will chase and try to "detain" (expel) you.
 
-The "Forgetfulness" Timer: If the player stays in the dark for too long without taking a photo, the layout of the map may subtly shift, representing the character's losing grip on their surroundings.
+Lasers/Alarms: Some high-value items (like the Principal's Golden Pen) are protected by weight sensors or lasers.
 
-4. Visual & Audio Style
-4.1. Visuals
-Contrast: Heavy use of "True Black" versus vibrant, saturated colors in developed photos.
+3.3. Gadgets (The Thief's Tools)
+Lockpick: To open locked classroom doors or lockers.
 
-Aesthetic: A mix of Liminal Spaces and PS1-style lo-fi textures. This creates a nostalgic yet unsettling "found footage" feeling.
+Hacking Device: To temporarily disable cameras from a distance.
 
-VFX: Chromatic aberration and film grain increase as the character’s stress levels rise.
+Smoke Bomb: To escape when cornered in a hallway.
 
-4.2. Audio
-Dynamic Silence: Deep, oppressive silence in the void, contrasted with sharp, mechanical sounds of the camera (shutter clicks, flash recharging).
+4. Level Design (The School Layout)
+The school is divided into three main zones:
 
-Whispers: Distorted voices of professors and students that grow louder when the player is "lost."
+The Classrooms: Easy difficulty, low security. Focus on stealing test answers.
 
-5. Narrative & Character
-The Protagonist: Aras, a talented but broken student. He views the world through a lens because he is too afraid to look at it directly.
+The Teachers' Lounge: Medium difficulty. Requires keycards and timing.
 
-The Setting: A sprawling, non-Euclidean University of Cinema. The architecture changes based on Aras's emotional state.
+The Principal’s Office: High difficulty. Full of cameras, motion sensors, and the ultimate loot.
 
-The Goal: Complete a "Final Project" (a film) by photographing specific "Core Memories" hidden within the school, while avoiding the "Shadow of Doubt" that hunts him in the darkness.
+5. Visual & Audio Style
+Art Style: Stylized/Low-poly (like Hello Neighbor) or Realistic/Moody (like Thief).
 
-6. Technical Specifications
-Platform: PC / Console.
+Audio: Heartbeat sounds when near a guard, muffled school bells, and tense "spy" music that gets faster when you're spotted.
 
-Engine: Unity (using URP for custom post-processing effects).
+6. Progression System
+Reputation: Successful heists earn you "Street Cred" among students.
 
-Perspective: First-Person.
+Upgrades: Use "Black Market" points to buy better shoes (quieter) or better hacking tools.
