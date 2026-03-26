@@ -5,17 +5,19 @@ using UnityEngine;
 public class PickupObject : MonoBehaviour
 {
     [Header("Ayarlar")]
-    [SerializeField] private string itemName        = "Obje";
+    [SerializeField] private string itemName            = "Obje";
+    [SerializeField] private int    price               = 10;
     [SerializeField] private float  heldScaleMultiplier = 0.4f;
-    [SerializeField] private float  followSpeed     = 20f;
+    [SerializeField] private float  followSpeed         = 20f;
 
     private Rigidbody _rb;
     private Collider  _col;
     private Transform _holdPoint;
     private Vector3   _originalScale;
 
-    public bool   IsHeld    { get; private set; }
-    public string ItemName  => itemName;
+    public bool   IsHeld   { get; private set; }
+    public string ItemName => itemName;
+    public int    Price    => price;
 
     private void Awake()
     {
