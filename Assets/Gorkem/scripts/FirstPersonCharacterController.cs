@@ -157,4 +157,3 @@ public class FirstPersonCharacterController : MonoBehaviour
         _controller.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
     }
 }
-
