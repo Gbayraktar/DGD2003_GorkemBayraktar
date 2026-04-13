@@ -19,6 +19,7 @@ public class ViewFrustumOutline : MonoBehaviour
     [SerializeField] private List<Renderer> extraRenderers = new List<Renderer>();
 
     [Header("Outline")]
+    [Tooltip("Sadece Oyun (Play) modunda uygulanır. Materyalde Outline Width 0 kalsın; kalınlığı buradan ver.")]
     [SerializeField] private float outlineWidthWhenVisible = 0.02f;
 
     private readonly List<Renderer> _targets = new List<Renderer>();
@@ -40,6 +41,9 @@ public class ViewFrustumOutline : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!Application.isPlaying)
+            return;
+
         if (targetCamera == null)
             return;
 
@@ -56,6 +60,25 @@ public class ViewFrustumOutline : MonoBehaviour
 
             r.GetPropertyBlock(_mpb);
             _mpb.SetFloat(OutlineWidthId, w);
+            r.SetPropertyBlock(_mpb);
+        }
+    }
+
+    private void OnDisable()
+    {
+        ClearOutlineWidths();
+    }
+
+    private void ClearOutlineWidths()
+    {
+        for (int i = 0; i < _targets.Count; i++)
+        {
+            Renderer r = _targets[i];
+            if (r == null)
+                continue;
+
+            r.GetPropertyBlock(_mpb);
+            _mpb.SetFloat(OutlineWidthId, 0f);
             r.SetPropertyBlock(_mpb);
         }
     }
