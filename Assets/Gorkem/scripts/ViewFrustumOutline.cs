@@ -23,13 +23,18 @@ public class ViewFrustumOutline : MonoBehaviour
     [SerializeField] private float outlineWidthWhenVisible = 0.02f;
 
     private readonly List<Renderer> _targets = new List<Renderer>();
-    private readonly MaterialPropertyBlock _mpb = new MaterialPropertyBlock();
-    private Plane[] _frustumPlanes = new Plane[6];
+    private MaterialPropertyBlock _mpb;
+    private Plane[] _frustumPlanes;
 
     private void Awake()
     {
+        _mpb           = new MaterialPropertyBlock();
+        _frustumPlanes = new Plane[6];
+
         if (targetCamera == null)
             targetCamera = GetComponent<Camera>();
+        if (targetCamera == null)
+            targetCamera = Camera.main;
 
         RebuildTargetList();
     }
@@ -44,7 +49,7 @@ public class ViewFrustumOutline : MonoBehaviour
         if (!Application.isPlaying)
             return;
 
-        if (targetCamera == null)
+        if (targetCamera == null || _frustumPlanes == null)
             return;
 
         GeometryUtility.CalculateFrustumPlanes(targetCamera, _frustumPlanes);

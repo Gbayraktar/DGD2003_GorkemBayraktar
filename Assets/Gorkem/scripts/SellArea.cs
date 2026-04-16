@@ -1,21 +1,22 @@
 using UnityEngine;
+using System;
 
 public class SellArea : MonoBehaviour
 {
     [Header("Görsel")]
     [SerializeField] private Color gizmoColor = new Color(0f, 1f, 0.3f, 0.35f);
 
+    public static event Action<string, int> OnItemSold;
+
     private void OnTriggerEnter(Collider other)
     {
         PickupObject item = other.GetComponent<PickupObject>();
 
-        // Elde tutulan objeler satılmasın, sadece bırakılanlar
         if (item == null || item.IsHeld) return;
 
         Sell(item);
     }
 
-    // Trigger içinde duran obje bırakılınca da sat
     private void OnTriggerStay(Collider other)
     {
         PickupObject item = other.GetComponent<PickupObject>();
@@ -34,6 +35,7 @@ public class SellArea : MonoBehaviour
         }
 
         PlayerWallet.Instance.AddMoney(item.Price);
+        OnItemSold?.Invoke(item.ItemName, item.Price);
         Debug.Log($"{item.ItemName} satıldı! +{item.Price} para");
 
         Destroy(item.gameObject);

@@ -7,23 +7,35 @@ public class PickupObject : MonoBehaviour
     [Header("Ayarlar")]
     [SerializeField] private string itemName            = "Obje";
     [SerializeField] private int    price               = 10;
+    [SerializeField] private bool   isSellable          = true;
     [SerializeField] private float  heldScaleMultiplier = 0.4f;
     [SerializeField] private float  followSpeed         = 20f;
+
+    [Header("Başlangıç Fizik")]
+    [Tooltip("Açıksa obje havada asılı başlar, ilk alınıp bırakıldıktan sonra fizik devreye girer")]
+    [SerializeField] private bool startFloating = false;
 
     private Rigidbody _rb;
     private Collider  _col;
     private Transform _holdPoint;
     private Vector3   _originalScale;
 
-    public bool   IsHeld   { get; private set; }
-    public string ItemName => itemName;
-    public int    Price    => price;
+    public bool   IsHeld    { get; private set; }
+    public bool   IsSellable => isSellable;
+    public string ItemName  => itemName;
+    public int    Price     => price;
 
     private void Awake()
     {
         _rb            = GetComponent<Rigidbody>();
         _col           = GetComponent<Collider>();
         _originalScale = transform.localScale;
+
+        if (startFloating)
+        {
+            _rb.isKinematic = true;
+            _rb.useGravity  = false;
+        }
     }
 
     private void FixedUpdate()
