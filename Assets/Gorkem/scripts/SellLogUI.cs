@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ public class SellLogUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI soldItemsText;
     [SerializeField] private TextMeshProUGUI totalMoneyText;
     [SerializeField] private TextMeshProUGUI collectableValueText;
+
+    [Header("Sahne Geçişi")]
+    [SerializeField] private string nextSceneName;
 
     [Header("Ayarlar")]
     [SerializeField] private int maxVisibleItems = 10;
@@ -50,6 +54,9 @@ public class SellLogUI : MonoBehaviour
 
         RefreshUI();
         UpdateCollectableText();
+
+        if (_remainingCount <= 0 && !string.IsNullOrEmpty(nextSceneName))
+            SceneManager.LoadScene(nextSceneName);
     }
 
     private void RefreshUI()
