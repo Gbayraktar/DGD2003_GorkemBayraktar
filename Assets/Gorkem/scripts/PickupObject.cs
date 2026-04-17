@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -24,6 +25,31 @@ public class PickupObject : MonoBehaviour
     public bool   IsSellable => isSellable;
     public string ItemName  => itemName;
     public int    Price     => price;
+
+    // Sahnedeki aktif PickupObject sayısını takip eder
+    private static int _activeCount;
+    public static int ActiveCount => _activeCount;
+    public static event Action<int> OnActiveCountChanged;
+
+    // Play Mode tekrar başladığında static alanı sıfırla
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        _activeCount = 0;
+        OnActiveCountChanged = null;
+    }
+
+    private void OnEnable()
+    {
+        _activeCount++;
+        OnActiveCountChanged?.Invoke(_activeCount);
+    }
+
+    private void OnDisable()
+    {
+        _activeCount = Mathf.Max(0, _activeCount - 1);
+        OnActiveCountChanged?.Invoke(_activeCount);
+    }
 
     private void Awake()
     {
