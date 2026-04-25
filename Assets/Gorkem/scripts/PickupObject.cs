@@ -16,6 +16,15 @@ public class PickupObject : MonoBehaviour
     [Tooltip("Açıksa obje havada asılı başlar, ilk alınıp bırakıldıktan sonra fizik devreye girer")]
     [SerializeField] private bool startFloating = false;
 
+    [Header("Satış VFX/SFX (opsiyonel override)")]
+    [Tooltip("Boş bırakılırsa SellArea'daki varsayılan VFX kullanılır.")]
+    [SerializeField] private GameObject customSellVfx;
+    [Tooltip("Boş bırakılırsa SellArea'daki varsayılan SFX kullanılır.")]
+    [SerializeField] private AudioClip  customSellSfx;
+
+    public GameObject CustomSellVfx => customSellVfx;
+    public AudioClip  CustomSellSfx => customSellSfx;
+
     private Rigidbody _rb;
     private Collider  _col;
     private Transform _holdPoint;

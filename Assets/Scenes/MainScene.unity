@@ -1878,6 +1878,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &204364445
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2653,6 +2655,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &301274904
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2923,6 +2927,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &332309589
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4387,6 +4393,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &459895017
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4651,6 +4659,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &486467425
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7489,6 +7499,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SellArea
   gizmoColor: {r: 0, g: 1, b: 0.3, a: 0.35}
+  sellVfxPrefab: {fileID: 0}
+  vfxLifetime: 3
+  vfxYOffset: 0.5
+  sellSfx: {fileID: 0}
+  sfxVolume: 1
 --- !u!1 &774072516 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d69730fa180d8a944a9d0f0d1726e1c5, type: 3}
@@ -8366,6 +8381,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &870810007
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8572,6 +8589,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &878198938
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8950,6 +8969,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &917297945
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10519,6 +10540,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1067664756
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12571,6 +12594,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1283961730
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14993,6 +15018,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1553003964
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15680,6 +15707,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1608311367
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16977,6 +17006,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1708618649
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17032,6 +17063,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1709444228
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18163,6 +18196,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1822365850
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18358,6 +18393,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 0}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1833621054
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18649,7 +18686,7 @@ Transform:
   m_GameObject: {fileID: 1856917585}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -37.63, y: 17.08, z: -223.8}
+  m_LocalPosition: {x: -21.11, y: 17.08, z: -208}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19584,6 +19621,8 @@ MonoBehaviour:
   heldScaleMultiplier: 0.4
   followSpeed: 20
   startFloating: 0
+  customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  customSellSfx: {fileID: 0}
 --- !u!54 &1972087981
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21344,7 +21383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3811648856265109284, guid: 6ee3a6ec4a60ce544ad4af2d43912d3b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 40.6
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 3811648856265109284, guid: 6ee3a6ec4a60ce544ad4af2d43912d3b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -21352,7 +21391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3811648856265109284, guid: 6ee3a6ec4a60ce544ad4af2d43912d3b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -165.51483
+      value: -172.93
       objectReference: {fileID: 0}
     - target: {fileID: 3811648856265109284, guid: 6ee3a6ec4a60ce544ad4af2d43912d3b, type: 3}
       propertyPath: m_LocalRotation.w

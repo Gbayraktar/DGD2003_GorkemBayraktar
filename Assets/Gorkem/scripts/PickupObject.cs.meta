@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: f0dbc8a152f8bc840aa5bd998ccb72aa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - customSellVfx: {fileID: 6110117077260780806, guid: a6297858ebf85814a980beb87d684f3d, type: 3}
+  - customSellSfx: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
