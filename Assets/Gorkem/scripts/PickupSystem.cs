@@ -24,7 +24,7 @@ public class PickupSystem : MonoBehaviour
         if (_camera == null)
         {
             Debug.LogError("PickupSystem: Main Camera bulunamadı! Camera objesinin Tag'ini 'MainCamera' olarak ayarla.");
-            _camera = FindObjectOfType<Camera>();
+            _camera = FindFirstObjectByType<Camera>();
         }
 
         if (pickupPromptUI != null)

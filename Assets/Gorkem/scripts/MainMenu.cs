@@ -6,6 +6,16 @@ public class MainMenu : MonoBehaviour
     [Tooltip("Start butonuna basıldığında yüklenecek sahne adı (Build Settings'e eklenmiş olmalı)")]
     public string gameSceneName = "GameScene";
 
+    [Header("Credits")]
+    [Tooltip("Credits butonuna basıldığında açılıp/kapanacak panel")]
+    public GameObject creditsPanel;
+
+    void Start()
+    {
+        if (creditsPanel != null)
+            creditsPanel.SetActive(false);
+    }
+
     public void StartGame()
     {
         if (string.IsNullOrEmpty(gameSceneName))
@@ -15,6 +25,17 @@ public class MainMenu : MonoBehaviour
         }
 
         SceneManager.LoadScene(gameSceneName);
+    }
+
+    public void ToggleCredits()
+    {
+        if (creditsPanel == null)
+        {
+            Debug.LogWarning("MainMenu: creditsPanel atanmamış. Inspector'dan Credits panelini ata.");
+            return;
+        }
+
+        creditsPanel.SetActive(!creditsPanel.activeSelf);
     }
 
     public void QuitGame()
