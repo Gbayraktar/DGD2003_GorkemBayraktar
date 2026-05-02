@@ -37,27 +37,58 @@ public class PickupObject : MonoBehaviour
 
     // Sahnedeki aktif PickupObject sayısını takip eder
     private static int _activeCount;
-    public static int ActiveCount => _activeCount;
+    private static int _activeSellableCount;
+    public static int ActiveCount         => _activeCount;
+    public static int ActiveSellableCount => _activeSellableCount;
     public static event Action<int> OnActiveCountChanged;
+    public static event Action<int> OnActiveSellableCountChanged;
+
+    // Bu obje sayaçlara dahil edildi mi? (isSellable runtime'da değişebilir diye flag tutuyoruz)
+    private bool _countedAsActive;
+    private bool _countedAsSellable;
 
     // Play Mode tekrar başladığında static alanı sıfırla
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {
-        _activeCount = 0;
-        OnActiveCountChanged = null;
+        _activeCount                 = 0;
+        _activeSellableCount         = 0;
+        OnActiveCountChanged         = null;
+        OnActiveSellableCountChanged = null;
     }
 
     private void OnEnable()
     {
-        _activeCount++;
-        OnActiveCountChanged?.Invoke(_activeCount);
+        if (!_countedAsActive)
+        {
+            _countedAsActive = true;
+            _activeCount++;
+            OnActiveCountChanged?.Invoke(_activeCount);
+        }
+
+        if (isSellable && !_countedAsSellable)
+        {
+            _countedAsSellable = true;
+            _activeSellableCount++;
+            OnActiveSellableCountChanged?.Invoke(_activeSellableCount);
+        }
     }
 
     private void OnDisable()
     {
-        _activeCount = Mathf.Max(0, _activeCount - 1);
-        OnActiveCountChanged?.Invoke(_activeCount);
+        if (_countedAsActive)
+        {
+            _countedAsActive = false;
+            _activeCount = Mathf.Max(0, _activeCount - 1);
+            OnActiveCountChanged?.Invoke(_activeCount);
+        }
+
+        if (_countedAsSellable)
+        {
+            _countedAsSellable = false;
+            _activeSellableCount = Mathf.Max(0, _activeSellableCount - 1);
+            OnActiveSellableCountChanged?.Invoke(_activeSellableCount);
+        }
     }
 
     private void Awake()

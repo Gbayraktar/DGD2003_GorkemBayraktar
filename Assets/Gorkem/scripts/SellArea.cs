@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class SellArea : MonoBehaviour
 {
@@ -21,20 +22,25 @@ public class SellArea : MonoBehaviour
 
     public static event Action<string, int> OnItemSold;
 
+    // Aynı obje için OnTriggerEnter + OnTriggerStay ikisi birden Sell çağırmasın
+    private readonly HashSet<PickupObject> _processed = new();
+
     private void OnTriggerEnter(Collider other)
     {
-        PickupObject item = other.GetComponent<PickupObject>();
-
-        if (item == null || item.IsHeld) return;
-
-        Sell(item);
+        TrySell(other);
     }
 
     private void OnTriggerStay(Collider other)
     {
+        TrySell(other);
+    }
+
+    private void TrySell(Collider other)
+    {
         PickupObject item = other.GetComponent<PickupObject>();
 
         if (item == null || item.IsHeld) return;
+        if (!_processed.Add(item)) return;
 
         Sell(item);
     }
