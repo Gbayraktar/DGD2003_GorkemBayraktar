@@ -1,21 +1,31 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PickupSystem : MonoBehaviour
 {
     [Header("Ayarlar")]
     [SerializeField] private float pickupRange  = 2.5f;
     [SerializeField] private float throwForce   = 5f;
+    [Tooltip("Sadece bu Layer'lardaki objeler raycast ile algılanır. 'Everything' bırakılabilir.")]
+    [SerializeField] private LayerMask pickupMask = ~0;
 
     [Header("Tutma Noktası")]
     [SerializeField] private Transform holdPoint;
 
     [Header("Görsel Geri Bildirim")]
+    [Tooltip("Bakılan objede gösterilecek prompt paneli (örn. 'E - Al')")]
     [SerializeField] private GameObject pickupPromptUI;
+    [Tooltip("Opsiyonel — bakılan objenin ismini yazar")]
+    [SerializeField] private TextMeshProUGUI itemNameText;
+    [Tooltip("Opsiyonel — bakılan objenin fiyatını yazar")]
+    [SerializeField] private TextMeshProUGUI itemPriceText;
 
     private PickupObject _heldObject;
     private PickupObject _lookingAt;
-    private Camera _camera;
+    private PickupObject _lastPromptTarget;
+    private bool         _promptVisible;
+    private Camera       _camera;
 
     private void Start()
     {
@@ -27,8 +37,7 @@ public class PickupSystem : MonoBehaviour
             _camera = FindFirstObjectByType<Camera>();
         }
 
-        if (pickupPromptUI != null)
-            pickupPromptUI.SetActive(false);
+        SetPromptVisible(false);
     }
 
     private void Update()
@@ -45,17 +54,50 @@ public class PickupSystem : MonoBehaviour
 
         Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
 
-        if (Physics.Raycast(ray, out RaycastHit hit, pickupRange))
+        if (Physics.Raycast(ray, out RaycastHit hit, pickupRange, pickupMask, QueryTriggerInteraction.Ignore))
         {
-            PickupObject pickable = hit.collider.GetComponent<PickupObject>();
+            PickupObject pickable = hit.collider.GetComponentInParent<PickupObject>();
 
             if (pickable != null && !pickable.IsHeld)
                 _lookingAt = pickable;
         }
 
-        // UI prompt göster/gizle
-        if (pickupPromptUI != null)
-            pickupPromptUI.SetActive(_lookingAt != null && _heldObject == null);
+        UpdatePromptUI();
+    }
+
+    private void UpdatePromptUI()
+    {
+        bool shouldShow = _lookingAt != null && _heldObject == null;
+
+        if (shouldShow)
+        {
+            SetPromptVisible(true);
+
+            if (_lookingAt != _lastPromptTarget)
+            {
+                if (itemNameText != null)
+                    itemNameText.text = _lookingAt.ItemName;
+
+                if (itemPriceText != null)
+                    itemPriceText.text = _lookingAt.IsSellable ? $"${_lookingAt.Price}" : string.Empty;
+
+                _lastPromptTarget = _lookingAt;
+            }
+        }
+        else
+        {
+            SetPromptVisible(false);
+            _lastPromptTarget = null;
+        }
+    }
+
+    private void SetPromptVisible(bool visible)
+    {
+        if (pickupPromptUI == null) return;
+        if (_promptVisible == visible) return;
+
+        pickupPromptUI.SetActive(visible);
+        _promptVisible = visible;
     }
 
     private void HandleInput()
@@ -70,7 +112,6 @@ public class PickupSystem : MonoBehaviour
                 PickupObject();
         }
 
-        // G tuşuyla fırlat
         if (Keyboard.current.gKey.wasPressedThisFrame && _heldObject != null)
             ThrowObject();
     }
@@ -85,11 +126,13 @@ public class PickupSystem : MonoBehaviour
 
         _heldObject = _lookingAt;
         _heldObject.Pickup(holdPoint);
+
+        SetPromptVisible(false);
+        _lastPromptTarget = null;
     }
 
     private void DropObject()
     {
-        // Objeyi oyuncunun önüne bırak, altına değil
         Vector3 dropPos = _camera.transform.position + _camera.transform.forward * 1.5f;
         _heldObject.Drop(dropPos);
         _heldObject = null;
@@ -103,7 +146,6 @@ public class PickupSystem : MonoBehaviour
         _heldObject = null;
     }
 
-    // Raycast menzilini editörde göster
     private void OnDrawGizmosSelected()
     {
         if (_camera == null) return;
