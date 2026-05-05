@@ -15,9 +15,11 @@ GameObject:
   - component: {fileID: 3686985598284097439}
   - component: {fileID: 2814489982461310316}
   - component: {fileID: 7098618405095095622}
+  - component: {fileID: 1426943818409274385}
+  - component: {fileID: 7331161305379433027}
   m_Layer: 0
   m_Name: MainCamera
-  m_TagString: Player
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -204,8 +206,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupSystem
   pickupRange: 2.5
   throwForce: 5
+  pickupMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   holdPoint: {fileID: 8859608852405188926}
   pickupPromptUI: {fileID: 0}
+  itemNameText: {fileID: 0}
+  itemPriceText: {fileID: 0}
+--- !u!114 &1426943818409274385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2459369263231140090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0446882cef4c1094ca03ce7289567eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LookAtUIDetector
+  range: 3
+  mask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerInteraction: 1
+  mode: 1
+  showDuration: 1
+  interactKey: 19
+  infoPanel: {fileID: 0}
+  infoText: {fileID: 0}
+--- !u!114 &7331161305379433027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2459369263231140090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2beda1d4614d3e64ba36424301b5d64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineEffect
+  raycastRange: 10
+  detectionMask:
+    serializedVersion: 2
+    m_Bits: 128
+  outlineMaterial: {fileID: 2100000, guid: b13966f8244f62447ba36fe903e1c08f, type: 2}
+  ignoreTags:
+  - Player
+  - MainCamera
 --- !u!1 &4057302385827918960
 GameObject:
   m_ObjectHideFlags: 0
