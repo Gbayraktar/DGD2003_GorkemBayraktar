@@ -1795,7 +1795,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db35d63e47626c45ae2c2d6e1db3e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  gameSceneName: GameScene
+  gameSceneName: MainScene
+  fallbackSceneBuildIndex: -1
   creditsPanel: {fileID: 986888502}
 --- !u!1 &1730528111
 GameObject:
