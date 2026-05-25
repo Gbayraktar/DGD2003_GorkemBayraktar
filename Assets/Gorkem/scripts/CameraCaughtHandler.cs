@@ -10,12 +10,15 @@ using UnityEngine.UI;
 /// boyunca aktif kalırsa sahne yeniden yüklenir (oyun yeniden başlar).
 /// Oyuncu kameralardan kaçtığında kaplama yumuşak şekilde söner ve sayaç
 /// sıfırlanır.
+/// Sahneye elle eklemen gerekmez — SecurityCamera sahnede olduğunda otomatik oluşur.
 /// </summary>
 public class CameraCaughtHandler : MonoBehaviour
 {
+    public static CameraCaughtHandler Instance { get; private set; }
+
     [Header("Yakalanma")]
     [Tooltip("Kırmızı görüş kaç saniye kesintisiz sürerse oyun yeniden başlar.")]
-    [SerializeField] private float catchDuration = 3f;
+    [SerializeField] private float catchDuration = 2f;
 
     [Header("Kırmızı Kaplama")]
     [Tooltip("Boş bırakılırsa otomatik olarak kendi Canvas + Image üretilir.")]
@@ -28,17 +31,62 @@ public class CameraCaughtHandler : MonoBehaviour
     [Tooltip("Boş bırakılırsa aktif sahne yeniden yüklenir.")]
     [SerializeField] private string restartSceneName = "";
 
-    private readonly List<SecurityCamera> _cameras = new List<SecurityCamera>();
+    private readonly HashSet<SecurityCamera> _cameras = new HashSet<SecurityCamera>();
     private float _caughtTimer;
     private bool  _isRestarting;
     private float _currentAlpha;
 
+    /// <summary>
+    /// Sahnedeki SecurityCamera'lar bu metodu çağırır; handler yoksa oluşturulur.
+    /// </summary>
+    public static void Register(SecurityCamera camera)
+    {
+        if (camera == null) return;
+        EnsureExists();
+        Instance._cameras.Add(camera);
+    }
+
+    public static void Unregister(SecurityCamera camera)
+    {
+        if (camera == null || Instance == null) return;
+        Instance._cameras.Remove(camera);
+    }
+
+    public static void EnsureExists()
+    {
+        if (Instance != null) return;
+
+#if UNITY_2023_1_OR_NEWER
+        Instance = Object.FindAnyObjectByType<CameraCaughtHandler>();
+#else
+        Instance = Object.FindObjectOfType<CameraCaughtHandler>();
+#endif
+        if (Instance != null) return;
+
+        var go = new GameObject("CameraCaughtHandler (Auto)");
+        Instance = go.AddComponent<CameraCaughtHandler>();
+    }
+
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         if (overlayImage == null)
             overlayImage = CreateOverlayImage();
 
         SetAlpha(0f);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     private void Start()
@@ -49,6 +97,8 @@ public class CameraCaughtHandler : MonoBehaviour
     private void Update()
     {
         if (_isRestarting) return;
+
+        PruneNullCameras();
 
         bool seen = IsAnyCameraSeeingPlayer();
 
@@ -69,31 +119,36 @@ public class CameraCaughtHandler : MonoBehaviour
         }
     }
 
+    private void PruneNullCameras()
+    {
+        _cameras.RemoveWhere(c => c == null);
+    }
+
     private bool IsAnyCameraSeeingPlayer()
     {
-        for (int i = 0; i < _cameras.Count; i++)
+        foreach (SecurityCamera cam in _cameras)
         {
-            SecurityCamera cam = _cameras[i];
-            if (cam == null) continue;
-            if (cam.PlayerDetected) return true;
+            if (cam != null && cam.PlayerDetected)
+                return true;
         }
         return false;
     }
 
     private void RefreshCameras()
     {
-        _cameras.Clear();
 #if UNITY_2023_1_OR_NEWER
         SecurityCamera[] found = Object.FindObjectsByType<SecurityCamera>(FindObjectsSortMode.None);
 #else
         SecurityCamera[] found = Object.FindObjectsOfType<SecurityCamera>();
 #endif
-        _cameras.AddRange(found);
+        foreach (SecurityCamera cam in found)
+            _cameras.Add(cam);
     }
 
     private IEnumerator RestartRoutine()
     {
         _isRestarting = true;
+        Debug.Log("[CameraCaught] Oyuncu yakalandı — sahne yeniden yükleniyor.", this);
 
         while (_currentAlpha < 1f)
         {

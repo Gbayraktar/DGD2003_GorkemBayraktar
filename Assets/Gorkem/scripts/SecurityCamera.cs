@@ -40,13 +40,27 @@ public class SecurityCamera : MonoBehaviour
     public float   FieldOfView     => fieldOfView;
     public Vector3 FacingDirection => transform.TransformDirection(Quaternion.Euler(directionOffset) * Vector3.forward);
 
+    private void OnEnable()
+    {
+        CameraCaughtHandler.EnsureExists();
+        CameraCaughtHandler.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        CameraCaughtHandler.Unregister(this);
+    }
+
     private void Start()
     {
         _initialRotation = transform.rotation;
         _facingDirection = Quaternion.Euler(directionOffset) * Vector3.forward;
 
         GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj != null) _player = playerObj.transform;
+        if (playerObj != null)
+            _player = playerObj.transform;
+        else
+            Debug.LogWarning($"[SecurityCamera] '{name}' için 'Player' tag'li obje bulunamadı. Tespit çalışmaz.", this);
     }
 
     private void Update()

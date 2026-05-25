@@ -13,6 +13,12 @@ public class PickupSystem : MonoBehaviour
     [Header("Tutma Noktası")]
     [SerializeField] private Transform holdPoint;
 
+    [Header("Bırakma / Fırlatma")]
+    [Tooltip("Yere bakarak bırakırken zemini bulmak için kullanılan raycast mesafesi.")]
+    [SerializeField] private float dropRayDistance = 4f;
+    [Tooltip("Obje zemine yerleştirilirken yüzeyden ne kadar yukarıda dursun.")]
+    [SerializeField] private float surfaceOffset = 0.08f;
+
     [Header("Görsel Geri Bildirim")]
     [Tooltip("Bakılan objede gösterilecek prompt paneli (örn. 'E - Al')")]
     [SerializeField] private GameObject pickupPromptUI;
@@ -133,17 +139,30 @@ public class PickupSystem : MonoBehaviour
 
     private void DropObject()
     {
-        Vector3 dropPos = _camera.transform.position + _camera.transform.forward * 1.5f;
-        _heldObject.Drop(dropPos);
+        _heldObject.Drop(GetDropPosition());
         _heldObject = null;
     }
 
     private void ThrowObject()
     {
-        Vector3 dropPos  = _camera.transform.position + _camera.transform.forward * 1.5f;
         Vector3 throwDir = _camera.transform.forward * throwForce;
-        _heldObject.Drop(dropPos, throwDir);
+        _heldObject.Drop(Vector3.zero, throwDir);
         _heldObject = null;
+    }
+
+    private Vector3 GetDropPosition()
+    {
+        Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, dropRayDistance, pickupMask, QueryTriggerInteraction.Ignore))
+            return hit.point + hit.normal * surfaceOffset;
+
+        Vector3 fallback = _camera.transform.position + _camera.transform.forward * 1.5f;
+
+        if (Physics.Raycast(fallback + Vector3.up * 2f, Vector3.down, out RaycastHit groundHit, 5f, pickupMask, QueryTriggerInteraction.Ignore))
+            fallback.y = groundHit.point.y + surfaceOffset;
+
+        return fallback;
     }
 
     private void OnDrawGizmosSelected()

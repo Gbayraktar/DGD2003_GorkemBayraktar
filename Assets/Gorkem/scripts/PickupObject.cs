@@ -135,13 +135,16 @@ public class PickupObject : MonoBehaviour
         IsHeld     = false;
         _holdPoint = null;
 
-        // Objeyi oyuncunun önüne taşı, sonra fiziği ve collider'ı aç
-        transform.position   = dropPosition;
+        // Fırlatırken mevcut konumdan devam et; bırakırken güvenli noktaya taşı
+        if (throwForce == Vector3.zero)
+            transform.position = dropPosition;
+
         transform.localScale = _originalScale;
 
         _col.enabled    = true;
         _rb.isKinematic = false;
         _rb.useGravity  = true;
+        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         if (throwForce != Vector3.zero)
             _rb.AddForce(throwForce, ForceMode.Impulse);
