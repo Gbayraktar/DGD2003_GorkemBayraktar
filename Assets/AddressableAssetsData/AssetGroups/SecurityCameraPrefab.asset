@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SecurityCameraPrefab
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: SecurityCameraPrefab
+  m_GUID: d3cc8dd9f16fcd2488f9d3bf3aa0e770
+  m_SerializeEntries:
+  - m_GUID: 66528c8029cf100449fcd5955a18042a
+    m_Address: Assets/Gorkem/prefabs/Team3_Sanchez_SecurityCamera.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5b3cd1de68ae8e745a82400c87863bf4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4c1632d8e5570194e84f170fc49faf79, type: 2}
+    - {fileID: 11400000, guid: 4d93efbcd9ff4c84f90dd105e5803670, type: 2}
