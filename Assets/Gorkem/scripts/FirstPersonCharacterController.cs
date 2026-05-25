@@ -9,6 +9,7 @@ public class FirstPersonCharacterController : MonoBehaviour
 
     [Header("Bakış (Mouse)")]
     [SerializeField] private float mouseSensitivity = 0.2f;
+    [SerializeField] private float defaultMouseSensitivity = 0.2f;
     [SerializeField] private float pitchMin = -80f;
     [SerializeField] private float pitchMax = 80f;
     [Tooltip("Hareket sadece imleç kilitliyken yapılsın mı?")]
@@ -60,8 +61,18 @@ public class FirstPersonCharacterController : MonoBehaviour
             if (_pitch > 180f) _pitch -= 360f; // 0..360 yerine -180..180
         }
 
+        defaultMouseSensitivity = mouseSensitivity;
+
+        if (GameSaveManager.Instance != null)
+            SetMouseSensitivityScale(GameSaveManager.Instance.MouseSensitivity, 0.05f, 0.5f);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public void SetMouseSensitivityScale(float normalized01, float min, float max)
+    {
+        mouseSensitivity = Mathf.Lerp(min, max, Mathf.Clamp01(normalized01));
     }
 
     private void Update()
@@ -74,9 +85,14 @@ public class FirstPersonCharacterController : MonoBehaviour
     private void HandleCursorToggle()
     {
         if (Keyboard.current == null) return;
+        if (PauseMenuController.IsOpen) return;
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
+            // Pause menü varsa ESC onun işi — sadece imleç açma, panel açma burada yapılmaz
+            if (PauseMenuController.Instance != null)
+                return;
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             return;
@@ -94,6 +110,7 @@ public class FirstPersonCharacterController : MonoBehaviour
     private void HandleMouseLook()
     {
         if (Mouse.current == null) return;
+        if (PauseMenuController.IsOpen) return;
 
         if (requireCursorLockedForLook && Cursor.lockState != CursorLockMode.Locked)
             return;

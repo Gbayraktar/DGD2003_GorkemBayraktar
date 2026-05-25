@@ -14,6 +14,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     [Header("Orbit")]
     [SerializeField] private float sensitivity = 0.2f;
+    [SerializeField] private float defaultSensitivity = 0.2f;
     [SerializeField] private float verticalMin = -15f;
     [SerializeField] private float verticalMax = 60f;
 
@@ -31,8 +32,18 @@ public class ThirdPersonCamera : MonoBehaviour
         _yaw   = transform.eulerAngles.y;
         _pitch = transform.eulerAngles.x;
 
+        defaultSensitivity = sensitivity;
+
+        if (GameSaveManager.Instance != null)
+            SetSensitivityScale(GameSaveManager.Instance.MouseSensitivity, 0.05f, 0.5f);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
+    }
+
+    public void SetSensitivityScale(float normalized01, float min, float max)
+    {
+        sensitivity = Mathf.Lerp(min, max, Mathf.Clamp01(normalized01));
     }
 
     private void LateUpdate()
@@ -46,6 +57,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void HandleOrbit()
     {
+        if (PauseMenuController.IsOpen) return;
+
         if (Mouse.current != null)
         {
             Vector2 delta = Mouse.current.delta.ReadValue();
@@ -78,9 +91,13 @@ public class ThirdPersonCamera : MonoBehaviour
     private void HandleCursorToggle()
     {
         if (Keyboard.current == null) return;
+        if (PauseMenuController.IsOpen) return;
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
+            if (PauseMenuController.Instance != null)
+                return;
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible   = true;
         }

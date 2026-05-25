@@ -210,6 +210,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   holdPoint: {fileID: 8859608852405188926}
+  dropRayDistance: 4
+  surfaceOffset: 0.08
   pickupPromptUI: {fileID: 0}
   itemNameText: {fileID: 0}
   itemPriceText: {fileID: 0}
