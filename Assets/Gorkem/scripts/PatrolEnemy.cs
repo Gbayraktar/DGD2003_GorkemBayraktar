@@ -1,103 +1,63 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class PatrolEnemy : MonoBehaviour
 {
-    [Header("Devriye Noktaları")]
-    [SerializeField] private Transform pointA;
-    [SerializeField] private Transform pointB;
+    [Header("NavMesh Devriye")]
+    [SerializeField] private float patrolRadius = 6f;
+    [SerializeField] private float waitAtPoint = 1.2f;
+    [SerializeField] private float arriveDistance = 0.35f;
 
-    [Header("Ayarlar")]
-    [SerializeField] private float moveSpeed    = 3f;
-    [SerializeField] private float waitTime     = 1f;
-    [SerializeField] private float rotationSpeed = 8f;
-    [SerializeField] private float stoppingDistance = 0.2f;
-
-    [Header("Fizik")]
-    [SerializeField] private float gravity = -20f;
-
-    private CharacterController _controller;
-    private Transform _currentTarget;
-    private float _waitTimer = 0f;
-    private bool _isWaiting = false;
-    private Vector3 _velocity;
+    private NavMeshAgent _agent;
+    private Vector3 _centerPoint;
+    private float _waitTimer;
 
     private void Start()
     {
-        _controller    = GetComponent<CharacterController>();
-        _currentTarget = pointA;
+        _agent = GetComponent<NavMeshAgent>();
+        _centerPoint = transform.position;
+
+        _agent.stoppingDistance = arriveDistance;
+        PickNextPatrolPoint();
     }
 
     private void Update()
     {
-        ApplyGravity();
+        if (_agent.pathPending) return;
 
-        if (_isWaiting)
+        if (_agent.remainingDistance <= _agent.stoppingDistance)
         {
-            _waitTimer -= Time.deltaTime;
-            if (_waitTimer <= 0f)
-                _isWaiting = false;
-
-            return;
+            _waitTimer += Time.deltaTime;
+            if (_waitTimer >= waitAtPoint)
+            {
+                _waitTimer = 0f;
+                PickNextPatrolPoint();
+            }
         }
-
-        MoveTowardsTarget();
     }
 
-    private void MoveTowardsTarget()
+    private void PickNextPatrolPoint()
     {
-        if (_currentTarget == null) return;
-
-        Vector3 targetPos = new Vector3(_currentTarget.position.x, transform.position.y, _currentTarget.position.z);
-        Vector3 direction = targetPos - transform.position;
-        float   distance  = direction.magnitude;
-
-        if (distance <= stoppingDistance)
+        for (int i = 0; i < 15; i++)
         {
-            // Hedefe ulaşıldı: bekle ve diğer noktaya geç
-            _isWaiting     = true;
-            _waitTimer     = waitTime;
-            _currentTarget = _currentTarget == pointA ? pointB : pointA;
-            return;
+            Vector2 rnd2 = Random.insideUnitCircle * patrolRadius;
+            Vector3 candidate = _centerPoint + new Vector3(rnd2.x, 0f, rnd2.y);
+
+            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            {
+                _agent.SetDestination(hit.position);
+                return;
+            }
         }
 
-        // Hedefe doğru dön
-        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        // İlerle
-        _controller.Move(direction.normalized * moveSpeed * Time.deltaTime);
+        // Yakın çevrede nokta bulunamazsa merkezde bekle.
+        _agent.SetDestination(_centerPoint);
     }
 
-    private void ApplyGravity()
+    private void OnDrawGizmosSelected()
     {
-        if (_controller.isGrounded && _velocity.y < 0f)
-            _velocity.y = -2f;
-
-        _velocity.y += gravity * Time.deltaTime;
-        _controller.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
-    }
-
-    // Editörde noktaları ve yolu görselleştir
-    private void OnDrawGizmos()
-    {
-        if (pointA != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(pointA.position, 0.2f);
-        }
-
-        if (pointB != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(pointB.position, 0.2f);
-        }
-
-        if (pointA != null && pointB != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(pointA.position, pointB.position);
-        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Application.isPlaying ? _centerPoint : transform.position, patrolRadius);
     }
 }
