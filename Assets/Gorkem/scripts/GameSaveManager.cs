@@ -11,9 +11,10 @@ public class GameSaveManager : MonoBehaviour
     public static GameSaveManager Instance { get; private set; }
 
     // --- PlayerPrefs anahtarları (kısa string sabitler) ---
-    const string KeyMusicOn     = "MusicOn";
+    const string KeyMusicOn      = "MusicOn";
     const string KeyMasterVolume = "MasterVolume";
-    const string KeyMouseSens   = "MouseSensitivity";
+    const string KeySfxVolume    = "SfxVolume";
+    const string KeyMouseSens    = "MouseSensitivity";
 
     const string SaveFileName = "gamesave.json";
 
@@ -35,6 +36,16 @@ public class GameSaveManager : MonoBehaviour
         set
         {
             PlayerPrefs.SetFloat(KeyMasterVolume, Mathf.Clamp01(value));
+            PlayerPrefs.Save();
+        }
+    }
+
+    public float SfxVolume
+    {
+        get => PlayerPrefs.GetFloat(KeySfxVolume, 1f);
+        set
+        {
+            PlayerPrefs.SetFloat(KeySfxVolume, Mathf.Clamp01(value));
             PlayerPrefs.Save();
         }
     }

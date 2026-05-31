@@ -13,17 +13,18 @@ public class MusicToggleButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public Sprite offNormalSprite;
     public Sprite offHoverSprite;
 
-    [Header("Başlangıç durumu")]
-    [Tooltip("Açık mı kapalı mı başlasın")]
-    public bool isMusicOn = true;
-
     private Image _image;
     private bool _isHovering;
 
-    void Awake()
+    private void Awake()
     {
         _image = GetComponent<Image>();
-        UpdateSprite();
+    }
+
+    private void Start()
+    {
+        if (MainMenuAudio.Instance != null)
+            UpdateSprite();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -40,23 +41,21 @@ public class MusicToggleButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        isMusicOn = !isMusicOn;
-        UpdateSprite();
+        if (MainMenuAudio.Instance != null)
+            MainMenuAudio.Instance.ToggleMusic();
 
-        // İleride müzik aç/kapa kodu buraya gelecek:
-        // AudioListener.pause = !isMusicOn;
-        // veya kendi AudioManager'ına bağla.
+        UpdateSprite();
     }
 
-    void UpdateSprite()
+    public void UpdateSprite()
     {
         if (_image == null) return;
 
-        Sprite target;
-        if (isMusicOn)
-            target = _isHovering ? onHoverSprite : onNormalSprite;
-        else
-            target = _isHovering ? offHoverSprite : offNormalSprite;
+        bool musicOn = MainMenuAudio.Instance == null || MainMenuAudio.Instance.IsMusicOn;
+
+        Sprite target = musicOn
+            ? (_isHovering ? onHoverSprite : onNormalSprite)
+            : (_isHovering ? offHoverSprite : offNormalSprite);
 
         if (target != null)
             _image.sprite = target;
