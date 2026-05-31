@@ -11499,7 +11499,7 @@ MonoBehaviour:
   sellVfxPrefab: {fileID: 0}
   vfxLifetime: 3
   vfxYOffset: 0.5
-  sellSfx: {fileID: 0}
+  sellSfx: {fileID: 8300000, guid: 3a8636d632051e04d988dc5d8d1eb762, type: 3}
   sfxVolume: 1
 --- !u!1 &774072516 stripped
 GameObject:
@@ -12446,6 +12446,7 @@ GameObject:
   - component: {fileID: 832575519}
   - component: {fileID: 832575518}
   - component: {fileID: 832575520}
+  - component: {fileID: 832575521}
   m_Layer: 0
   m_Name: Global Volume
   m_TagString: Untagged
@@ -12508,6 +12509,19 @@ MonoBehaviour:
   mainMenuSceneName: MainMenu
   firstPersonController: {fileID: 571805818}
   thirdPersonCamera: {fileID: 0}
+--- !u!114 &832575521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832575517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98fe721f20cd5b545b402c2aec2985ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallet
+  startingMoney: 0
 --- !u!1 &837717723
 GameObject:
   m_ObjectHideFlags: 0
