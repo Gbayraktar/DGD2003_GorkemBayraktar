@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class PatrolEnemy : MonoBehaviour
 {
     [Header("Devriye Noktaları")]
@@ -9,89 +9,83 @@ public class PatrolEnemy : MonoBehaviour
     [SerializeField] private Transform pointB;
 
     [Header("Ayarlar")]
-    [SerializeField] private float moveSpeed    = 3f;
-    [SerializeField] private float waitTime     = 1f;
-    [SerializeField] private float rotationSpeed = 8f;
-    [SerializeField] private float stoppingDistance = 0.2f;
+    [SerializeField] private float waitAtPoint = 1f;
+    [SerializeField] private float arriveDistance = 0.3f;
 
-    [Header("Fizik")]
-    [SerializeField] private float gravity = -20f;
-
-    private CharacterController _controller;
-    private Transform _currentTarget;
-    private float _waitTimer = 0f;
-    private bool _isWaiting = false;
-    private Vector3 _velocity;
+    private NavMeshAgent _agent;
+    private Transform _target;
+    private float _waitTimer;
 
     private void Start()
     {
-        _controller    = GetComponent<CharacterController>();
-        _currentTarget = pointA;
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.stoppingDistance = arriveDistance;
+
+        TryAutoFindPoints();
+
+        if (pointA == null || pointB == null)
+        {
+            Debug.LogWarning("[PatrolEnemy] Point A ve Point B atanmamış! Boş obje oluşturup sürükle.", this);
+            return;
+        }
+
+        _target = pointA;
+        GoTo(_target);
     }
 
     private void Update()
     {
-        ApplyGravity();
+        if (_target == null || _agent.pathPending) return;
 
-        if (_isWaiting)
+        if (_agent.remainingDistance <= _agent.stoppingDistance)
         {
-            _waitTimer -= Time.deltaTime;
-            if (_waitTimer <= 0f)
-                _isWaiting = false;
+            _waitTimer += Time.deltaTime;
+            if (_waitTimer >= waitAtPoint)
+            {
+                _waitTimer = 0f;
+                _target = _target == pointA ? pointB : pointA;
+                GoTo(_target);
+            }
+        }
+    }
 
-            return;
+    private void GoTo(Transform target)
+    {
+        if (target == null) return;
+
+        if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            _agent.SetDestination(hit.position);
+        else
+            _agent.SetDestination(target.position);
+    }
+
+    private void TryAutoFindPoints()
+    {
+        if (pointA == null)
+        {
+            GameObject a = GameObject.Find("PointA");
+            if (a != null) pointA = a.transform;
         }
 
-        MoveTowardsTarget();
-    }
-
-    private void MoveTowardsTarget()
-    {
-        if (_currentTarget == null) return;
-
-        Vector3 targetPos = new Vector3(_currentTarget.position.x, transform.position.y, _currentTarget.position.z);
-        Vector3 direction = targetPos - transform.position;
-        float   distance  = direction.magnitude;
-
-        if (distance <= stoppingDistance)
+        if (pointB == null)
         {
-            // Hedefe ulaşıldı: bekle ve diğer noktaya geç
-            _isWaiting     = true;
-            _waitTimer     = waitTime;
-            _currentTarget = _currentTarget == pointA ? pointB : pointA;
-            return;
+            GameObject b = GameObject.Find("PointB");
+            if (b != null) pointB = b.transform;
         }
-
-        // Hedefe doğru dön
-        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        // İlerle
-        _controller.Move(direction.normalized * moveSpeed * Time.deltaTime);
     }
 
-    private void ApplyGravity()
-    {
-        if (_controller.isGrounded && _velocity.y < 0f)
-            _velocity.y = -2f;
-
-        _velocity.y += gravity * Time.deltaTime;
-        _controller.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
-    }
-
-    // Editörde noktaları ve yolu görselleştir
     private void OnDrawGizmos()
     {
         if (pointA != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(pointA.position, 0.2f);
+            Gizmos.DrawSphere(pointA.position, 0.25f);
         }
 
         if (pointB != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(pointB.position, 0.2f);
+            Gizmos.DrawSphere(pointB.position, 0.25f);
         }
 
         if (pointA != null && pointB != null)

@@ -11,8 +11,9 @@ public class SellLogUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalMoneyText;
     [SerializeField] private TextMeshProUGUI collectableValueText;
 
-    [Header("Sahne Geçişi")]
-    [SerializeField] private string nextSceneName;
+    [Header("Kazanma")]
+    [Tooltip("Tüm eşyalar satılınca yüklenecek sahne (genelde MainMenu).")]
+    [SerializeField] private string winSceneName = "MainMenu";
 
     [Header("Ayarlar")]
     [SerializeField] private int maxVisibleItems = 10;
@@ -20,6 +21,7 @@ public class SellLogUI : MonoBehaviour
     private readonly List<string> _soldEntries = new();
     private int _totalEarned;
     private int _remainingCount;
+    private bool _gameWon;
 
     private void OnEnable()
     {
@@ -44,7 +46,7 @@ public class SellLogUI : MonoBehaviour
 
     private void HandleItemSold(string itemName, int price)
     {
-        _totalEarned    += price;
+        _totalEarned += price;
         _remainingCount--;
 
         _soldEntries.Add($"Para: +{price}");
@@ -55,8 +57,19 @@ public class SellLogUI : MonoBehaviour
         RefreshUI();
         UpdateCollectableText();
 
-        if (_remainingCount <= 0 && !string.IsNullOrEmpty(nextSceneName))
-            SceneManager.LoadScene(nextSceneName);
+        if (_remainingCount <= 0 && !_gameWon)
+            TriggerWin();
+    }
+
+    private void TriggerWin()
+    {
+        _gameWon = true;
+
+        if (GameSaveManager.Instance != null)
+            GameSaveManager.Instance.RecordGameResult(_totalEarned, _totalEarned);
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(winSceneName);
     }
 
     private void RefreshUI()
@@ -71,7 +84,6 @@ public class SellLogUI : MonoBehaviour
     private void UpdateCollectableText()
     {
         if (collectableValueText == null) return;
-
         collectableValueText.text = $"Bulunabilir objeler: {_remainingCount}";
     }
 }

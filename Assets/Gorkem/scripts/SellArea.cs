@@ -62,6 +62,24 @@ public class SellArea : MonoBehaviour
         Destroy(item.gameObject);
     }
 
+    /// <summary>Hile: sahnedeki tüm satılabilir objeleri anında satar.</summary>
+    public void CheatSellAll()
+    {
+        PickupObject[] items = FindObjectsByType<PickupObject>(FindObjectsSortMode.None);
+        var toSell = new List<PickupObject>(items.Length);
+
+        foreach (PickupObject item in items)
+        {
+            if (item != null && item.IsSellable && !item.IsHeld)
+                toSell.Add(item);
+        }
+
+        foreach (PickupObject item in toSell)
+            Sell(item);
+
+        Debug.Log($"[SellArea] Hile: {toSell.Count} obje satıldı.");
+    }
+
     private void SpawnSellEffects(PickupObject item)
     {
         Vector3 spawnPos = item.transform.position + Vector3.up * vfxYOffset;
