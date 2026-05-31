@@ -4,27 +4,38 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class PatrolEnemy : MonoBehaviour
 {
-    [Header("NavMesh Devriye")]
-    [SerializeField] private float patrolRadius = 6f;
-    [SerializeField] private float waitAtPoint = 1.2f;
-    [SerializeField] private float arriveDistance = 0.35f;
+    [Header("Devriye Noktaları")]
+    [SerializeField] private Transform pointA;
+    [SerializeField] private Transform pointB;
+
+    [Header("Ayarlar")]
+    [SerializeField] private float waitAtPoint = 1f;
+    [SerializeField] private float arriveDistance = 0.3f;
 
     private NavMeshAgent _agent;
-    private Vector3 _centerPoint;
+    private Transform _target;
     private float _waitTimer;
 
     private void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
-        _centerPoint = transform.position;
-
         _agent.stoppingDistance = arriveDistance;
-        PickNextPatrolPoint();
+
+        TryAutoFindPoints();
+
+        if (pointA == null || pointB == null)
+        {
+            Debug.LogWarning("[PatrolEnemy] Point A ve Point B atanmamış! Boş obje oluşturup sürükle.", this);
+            return;
+        }
+
+        _target = pointA;
+        GoTo(_target);
     }
 
     private void Update()
     {
-        if (_agent.pathPending) return;
+        if (_target == null || _agent.pathPending) return;
 
         if (_agent.remainingDistance <= _agent.stoppingDistance)
         {
@@ -32,32 +43,55 @@ public class PatrolEnemy : MonoBehaviour
             if (_waitTimer >= waitAtPoint)
             {
                 _waitTimer = 0f;
-                PickNextPatrolPoint();
+                _target = _target == pointA ? pointB : pointA;
+                GoTo(_target);
             }
         }
     }
 
-    private void PickNextPatrolPoint()
+    private void GoTo(Transform target)
     {
-        for (int i = 0; i < 15; i++)
+        if (target == null) return;
+
+        if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            _agent.SetDestination(hit.position);
+        else
+            _agent.SetDestination(target.position);
+    }
+
+    private void TryAutoFindPoints()
+    {
+        if (pointA == null)
         {
-            Vector2 rnd2 = Random.insideUnitCircle * patrolRadius;
-            Vector3 candidate = _centerPoint + new Vector3(rnd2.x, 0f, rnd2.y);
-
-            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                _agent.SetDestination(hit.position);
-                return;
-            }
+            GameObject a = GameObject.Find("PointA");
+            if (a != null) pointA = a.transform;
         }
 
-        // Yakın çevrede nokta bulunamazsa merkezde bekle.
-        _agent.SetDestination(_centerPoint);
+        if (pointB == null)
+        {
+            GameObject b = GameObject.Find("PointB");
+            if (b != null) pointB = b.transform;
+        }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(Application.isPlaying ? _centerPoint : transform.position, patrolRadius);
+        if (pointA != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(pointA.position, 0.25f);
+        }
+
+        if (pointB != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(pointB.position, 0.25f);
+        }
+
+        if (pointA != null && pointB != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(pointA.position, pointB.position);
+        }
     }
 }

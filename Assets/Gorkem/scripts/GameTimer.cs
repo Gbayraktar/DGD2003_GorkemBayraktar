@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System;
 
@@ -9,6 +10,8 @@ public class GameTimer : MonoBehaviour
 
     [Header("Ayarlar")]
     [SerializeField] private float totalSeconds = 90f;
+    [Tooltip("Süre bitince yüklenecek sahne (genelde MainScene).")]
+    [SerializeField] private string loseSceneName = "MainScene";
 
     [Header("Uyarı (Son saniyeler)")]
     [SerializeField] private float warningThreshold = 30f;
@@ -42,9 +45,20 @@ public class GameTimer : MonoBehaviour
             _isRunning = false;
             OnTimeUp?.Invoke();
             Debug.Log("Süre doldu!");
+            LoadLoseScene();
         }
 
         UpdateUI();
+    }
+
+    private void LoadLoseScene()
+    {
+        Time.timeScale = 1f;
+
+        if (!string.IsNullOrEmpty(loseSceneName))
+            SceneManager.LoadScene(loseSceneName);
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void UpdateUI()

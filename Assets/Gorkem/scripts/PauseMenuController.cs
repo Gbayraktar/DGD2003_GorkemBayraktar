@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// ESC: oyun durur, ana pause paneli açılır.
 /// Settings: ayar paneli. Geri: ana panele döner.
 /// ESC (her iki panelde): tüm paneller kapanır, oyun devam eder.
-/// Volume: müzik + ses efektleri (AudioListener.volume).
+/// Volume: oyun müziğinin ses seviyesi (GameMusicPlayer + MasterVolume).
 /// Slider'lar kodda otomatik bağlanır — Inspector OnValueChanged şart değil.
 /// </summary>
 public class PauseMenuController : MonoBehaviour
@@ -228,8 +228,11 @@ public class PauseMenuController : MonoBehaviour
         EnsureSaveManager();
         if (GameSaveManager.Instance == null) return;
 
+        float vol = GameSaveManager.Instance.MasterVolume;
+        if (vol <= 0.001f) vol = 1f;
+
         if (volumeSlider != null)
-            volumeSlider.SetValueWithoutNotify(GameSaveManager.Instance.MasterVolume);
+            volumeSlider.SetValueWithoutNotify(vol);
 
         if (sensitivitySlider != null)
             sensitivitySlider.SetValueWithoutNotify(GameSaveManager.Instance.MouseSensitivity);
@@ -240,7 +243,11 @@ public class PauseMenuController : MonoBehaviour
         EnsureSaveManager();
         if (GameSaveManager.Instance == null) return;
 
-        ApplyMasterVolume(GameSaveManager.Instance.MasterVolume);
+        float vol = GameSaveManager.Instance.MasterVolume;
+        if (vol <= 0.001f)
+            vol = 1f;
+
+        ApplyMasterVolume(vol);
         RefreshPlayerReferences();
         ApplySensitivity(GameSaveManager.Instance.MouseSensitivity);
         RefreshSliders();
@@ -258,8 +265,9 @@ public class PauseMenuController : MonoBehaviour
     private static void ApplyMasterVolume(float volume)
     {
         float v = Mathf.Clamp01(volume);
-        AudioListener.volume = v;
-        AudioListener.pause = false;
+
+        if (GameMusicPlayer.Instance != null)
+            GameMusicPlayer.Instance.SetVolumeMultiplier(v);
     }
 
     private void ApplySensitivity(float normalized01)
